@@ -9,6 +9,12 @@
 
 nextflow.enable.dsl = 2
 
+//
+// MODULE: Installed directly from nf-core/modules
+//
+include { MULTIQC                     } from './modules/nf-core/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE & PRINT PARAMETER SUMMARY
@@ -24,12 +30,12 @@ if (params.help) {
     def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --outdir results"
     log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
     System.exit(0)
-} else {
-    def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-    def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-    def summary_params = paramsSummaryMap(workflow)
-    log.info logo + paramsSummaryLog(workflow) + citation
 }
+
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+summary_params = paramsSummaryMap(workflow)
+log.info logo + paramsSummaryLog(workflow) + citation
 
 // Validate input parameters
 if (params.validate_params) {
@@ -63,13 +69,33 @@ include { JEWELER } from './workflows/jeweler'
 workflow OPENCOBRA_JEWELER {
     def ch_input = Channel.fromSamplesheet('input')
 
-    JEWELER (
-        ch_input,
-        ch_multiqc_config,
-        ch_multiqc_custom_config,
-        ch_multiqc_logo,
-        ch_multiqc_custom_methods_description
+    JEWELER(ch_input)
+
+    CUSTOM_DUMPSOFTWAREVERSIONS(
+        JEWELER.out.versions.unique().collectFile(name: 'collated_versions.yml')
     )
+
+    //
+    // MODULE: MultiQC
+    //
+    workflow_summary    = WorkflowJeweler.paramsSummaryMultiqc(workflow, summary_params)
+    ch_workflow_summary = Channel.value(workflow_summary)
+
+    methods_description    = WorkflowJeweler.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+    ch_methods_description = Channel.value(methods_description)
+
+    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+
+    MULTIQC (
+        ch_multiqc_files.collect(),
+        ch_multiqc_config.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList()
+    )
+    multiqc_report = MULTIQC.out.report.toList()
 }
 
 /*
