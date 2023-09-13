@@ -11,27 +11,25 @@ nextflow.enable.dsl = 2
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE & PRINT PARAMETER SUMMARY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { validateParameters; paramsHelp } from 'plugin/nf-validation'
+include { validateParameters; paramsHelp; paramsSummaryLog; paramsSummaryMap, fromSamplesheet } from 'plugin/nf-validation'
 
 // Print help message if needed
 if (params.help) {
     def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
     def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
+
     log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
     System.exit(0)
+} else {
+    def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+    def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+    def summary_params = paramsSummaryMap(workflow)
+
+    log.info logo + paramsSummaryLog(workflow) + citation
 }
 
 // Validate input parameters
@@ -40,6 +38,17 @@ if (params.validate_params) {
 }
 
 WorkflowMain.initialise(workflow, params, log)
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CONFIG FILES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -53,7 +62,15 @@ include { JEWELER } from './workflows/jeweler'
 // WORKFLOW: Run main opencobra/jeweler analysis pipeline
 //
 workflow OPENCOBRA_JEWELER {
-    JEWELER ()
+    def ch_input = Channel.fromSamplesheet('input')
+
+    JEWELER (
+        ch_input,
+        ch_multiqc_config,
+        ch_multiqc_custom_config,
+        ch_multiqc_logo,
+        ch_multiqc_custom_methods_description
+    )
 }
 
 /*
