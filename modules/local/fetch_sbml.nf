@@ -1,4 +1,4 @@
-process MEMOTE_REPORT_SNAPSHOT {
+process FETCH_SBML {
     tag "${meta.id}"
     label 'process_single'
 
@@ -6,10 +6,10 @@ process MEMOTE_REPORT_SNAPSHOT {
     container ""
 
     input:
-    tuple val(meta), path(model)
+    val(meta)
 
     output:
-    tuple val(meta), path('*.html'), emit: report
+    tuple val(meta), path('*.sbml.gz'), emit: sbml
     path 'versions.yml', emit: versions
 
     when:
@@ -17,33 +17,33 @@ process MEMOTE_REPORT_SNAPSHOT {
 
     script:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.html"
+    def filename = "${meta.id}.sbml.gz"
     """
-    memote report snapshot \\
+    fetch_sbml.py \\
         ${args} \\
-        --filename '${filename}' \\
-        '${model}'
+        --output '${filename}' \\
+        '${meta.id}'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        memote: \$(memote --version | sed 's/memote, version //g')
+        cobra: \$(python -c 'import cobra;print(cobra.__version__)')
     END_VERSIONS
     """
 
     stub:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.html"
+    def filename = "${meta.id}.sbml.gz"
     """
-    echo memote report snapshot \\
+    echo fetch_sbml.py \\
         ${args} \\
-        --filename '${filename}' \\
-        '${model}'
+        --output '${filename}' \\
+        '${meta.id}'
 
     touch '${filename}'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        memote: \$(memote --version | sed 's/memote, version //g')
+        cobra: \$(python -c 'import cobra;print(cobra.__version__)')
     END_VERSIONS
     """
 }

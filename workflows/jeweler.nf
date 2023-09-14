@@ -7,6 +7,7 @@
 //
 // MODULE: Local modules
 //
+include { FETCH_SBML } from '../modules/local/fetch_sbml'
 include { MEMOTE_REPORT_SNAPSHOT } from '../modules/local/memote_report_snapshot'
 
 //
@@ -39,12 +40,25 @@ workflow JEWELER {
     main:
         def ch_versions = Channel.empty()
 
-        MEMOTE_REPORT_SNAPSHOT(ch_input)
+        def ch_split_input = ch_input
+            .branch { meta, model ->
+                // Missing files are provided as an empty list.
+                no_model: model instanceof List
+                model: true
+            }
 
+        FETCH_SBML(ch_split_input.no_model.map { meta, model -> meta } )
+        ch_versions = ch_versions.mix(FETCH_SBML.out.versions.first())
+
+        def ch_memote_input = Channel.empty()
+            .mix(ch_split_input.model)
+            .mix(FETCH_SBML.out.sbml)
+
+        MEMOTE_REPORT_SNAPSHOT(ch_memote_input)
         ch_versions = ch_versions.mix(MEMOTE_REPORT_SNAPSHOT.out.versions.first())
 
     emit:
-        reports  = MEMOTE_REPORT_SNAPSHOT.out.report
+        report  = MEMOTE_REPORT_SNAPSHOT.out.report
         versions = ch_versions
 }
 

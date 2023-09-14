@@ -9,8 +9,8 @@ process MEMOTE_RUN {
     tuple val(meta), path(model)
 
     output:
-    path '*.json.gz'   , emit: outcome
-    path "versions.yml", emit: versions
+    tuple val(meta), path('*.json.gz'), emit: outcome
+    path 'versions.yml', emit: versions
 
     when:
     task.ext.when == null || task.ext.when
