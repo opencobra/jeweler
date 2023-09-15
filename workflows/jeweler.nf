@@ -43,7 +43,7 @@ workflow JEWELER {
         def ch_split_input = ch_input
             .branch { meta, model ->
                 // Missing files are provided as an empty list.
-                no_model: model instanceof List
+                no_model: model instanceof List && model.empty
                 model: true
             }
 
