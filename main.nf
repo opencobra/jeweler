@@ -71,13 +71,24 @@ workflow OPENCOBRA_JEWELER {
 
     JEWELER(ch_input)
 
+    // Collect generated reports.
+    ch_input.map { meta, model -> [meta.id, meta.name] }
+        .join(
+            JEWELER.out.report.map { meta, report -> [meta.id, report.name]},
+            by: 0,
+            remainder: true,
+            failOnDuplicate: true
+        )
+        .map { model_id, name, report ->
+            return "${model_id}\t${name ?: ''}\t${report_name ?: ''}"
+        }
+        .collectFile(name: "${params.outdir}/reports.tsv", newLine: true)
+
     CUSTOM_DUMPSOFTWAREVERSIONS(
         JEWELER.out.versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
-    //
-    // MODULE: MultiQC
-    //
+    // Combine results for MultiQC.
     workflow_summary    = WorkflowJeweler.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
