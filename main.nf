@@ -80,7 +80,7 @@ workflow OPENCOBRA_JEWELER {
             failOnDuplicate: true
         )
         .map { model_id, name, report ->
-            return "${model_id}\t${name ?: ''}\t${report_name ?: ''}"
+            return "${model_id}\t${name ?: ''}\t${report ?: ''}"
         }
         .collectFile(name: "${params.outdir}/reports.tsv", newLine: true)
 
