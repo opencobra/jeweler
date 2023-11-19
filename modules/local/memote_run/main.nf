@@ -3,7 +3,7 @@ process MEMOTE_RUN {
     label 'process_single'
 
     conda ""
-    container ""
+    container 'docker.io/opencobra/memote:0.15.1'
 
     input:
     tuple val(meta), path(model)

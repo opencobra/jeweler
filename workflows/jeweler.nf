@@ -7,8 +7,8 @@
 //
 // MODULE: Local modules
 //
-include { FETCH_SBML } from '../modules/local/fetch_sbml'
-include { MEMOTE_REPORT_SNAPSHOT } from '../modules/local/memote_report_snapshot'
+include { FETCH_SBML } from '../modules/local/fetch_sbml/main'
+include { MEMOTE_REPORT_SNAPSHOT } from '../modules/local/memote_report_snapshot/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
