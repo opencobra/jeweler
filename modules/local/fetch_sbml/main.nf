@@ -3,7 +3,7 @@ process FETCH_SBML {
     label 'process_single'
 
     conda ""
-    container 'docker.io/opencobra/memote:0.15.1'
+    container 'docker.io/opencobra/memote:0.16.0'
 
     input:
     val(meta)
