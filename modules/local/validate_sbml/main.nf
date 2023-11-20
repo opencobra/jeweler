@@ -39,7 +39,7 @@ process VALIDATE_SBML {
     #   --output '${filename}' \\
     #   '${model}'
 
-    echo valid
+    echo '${task.index % 2 ? 'valid' : 'invalid'}'
 
     touch '${filename}'
 
