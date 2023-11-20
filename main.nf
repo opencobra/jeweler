@@ -74,13 +74,13 @@ workflow OPENCOBRA_JEWELER {
     // Collect generated reports.
     ch_input.map { meta, model -> [meta.id, meta.name] }
         .join(
-            JEWELER.out.report.map { meta, report -> [meta.id, report.name]},
+            JEWELER.out.report.map { meta, report -> [meta.id, meta.is_valid, report.name]},
             by: 0,
             remainder: true,
             failOnDuplicate: true
         )
-        .map { model_id, name, report ->
-            return "${model_id}\t${name ?: ''}\t${report ?: ''}"
+        .map { model_id, name, is_valid, report ->
+            return "${model_id}\t${name ?: ''}\t${is_valid ?: 'false'}\t${report ?: ''}"
         }
         .collectFile(name: "${params.outdir}/reports.tsv", newLine: true)
 
