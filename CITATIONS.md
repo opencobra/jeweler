@@ -10,9 +10,13 @@
 
 ## Pipeline tools
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [COBRApy](https://doi.org/10.1186/1752-0509-7-74)
 
-  > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available online https://www.bioinformatics.babraham.ac.uk/projects/fastqc/.
+  > Ebrahim, A., Lerman, J. A., Palsson, B. O., & Hyduke, D. R. (2013). COBRApy: COnstraints-Based Reconstruction and Analysis for Python. BMC Systems Biology, 7(1), 74.
+
+- [MEMOTE](https://doi.org/10.1038/s41587-020-0477-4)
+
+  > Lieven, C., Beber, M. E., Olivier, B. G., Bergmann, F. T., Ataman, M., Babaei, P., Bartell, J. A., Blank, L. M., Chauhan, S., Correia, K., Diener, C., Dräger, A., Ebert, B. E., Edirisinghe, J. N., Faria, J. P., Feist, A. M., Fengos, G., Fleming, R. M. T., García-Jiménez, B., … Zhang, C. (2020). Publisher Correction: MEMOTE for standardized genome-scale metabolic model testing. Nature Biotechnology, 38(4), 504–504.
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
