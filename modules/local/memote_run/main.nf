@@ -1,6 +1,6 @@
 process MEMOTE_RUN {
     tag "${meta.id}"
-    label 'process_single'
+    label 'process_medium'
 
     conda ""
     container 'docker.io/opencobra/memote:0.16.0'
