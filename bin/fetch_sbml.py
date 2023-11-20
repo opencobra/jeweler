@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-"""Provide a command line tool to validate and transform tabular samplesheets."""
+"""Provide a command line tool to fetch an SBML document from an online repository."""
 
 
 import argparse
@@ -12,6 +12,7 @@ from typing import List, Optional
 
 import httpx
 from cobra.io import AbstractModelRepository, BiGGModels, BioModels
+
 
 logger = logging.getLogger()
 
