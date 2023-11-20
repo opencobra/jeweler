@@ -73,12 +73,21 @@ workflow OPENCOBRA_JEWELER {
 
     // Collect generated reports.
     ch_input.map { meta, model -> [meta.id, meta.name] }
+        // Join validation output information.
         .join(
-            JEWELER.out.report.map { meta, report -> [meta.id, meta.is_valid, report.name]},
+            JEWELER.out.validation.map { meta, report -> [meta.id, meta.is_valid] },
             by: 0,
             remainder: true,
             failOnDuplicate: true
         )
+        // Join report output information.
+        .join(
+            JEWELER.out.report.map { meta, report -> [meta.id, report.name]},
+            by: 0,
+            remainder: true,
+            failOnDuplicate: true
+        )
+        // Generate report line per model ID.
         .map { model_id, name, is_valid, report ->
             return "${model_id}\t${name ?: ''}\t${is_valid ?: 'false'}\t${report ?: ''}"
         }

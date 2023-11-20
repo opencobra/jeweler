@@ -49,10 +49,13 @@ workflow JEWELER {
         VALIDATE_SBML(ch_model_input)
         ch_versions = ch_versions.mix(VALIDATE_SBML.out.versions.first())
 
-        // Create a channel with valid SBML documents to pass to memote.
-        def ch_memote_input = VALIDATE_SBML.out.report.map { meta, msg, report ->
-                [meta.id, meta + [is_valid: msg.strip() == 'valid']]
+        // Convert validation stdout to property.
+        def ch_validation_output = VALIDATE_SBML.out.report.map { meta, msg, report ->
+                [meta + [is_valid: msg.strip() == 'valid'], report]
             }
+
+        // Create a channel with valid SBML documents to pass to memote.
+        def ch_memote_input = ch_validation_output.map { meta, report -> [meta.id, meta] }
             .filter { meta_id, meta -> meta.is_valid }
             .join(
                 ch_model_input.map { meta, model -> [meta.id, model] },
@@ -66,6 +69,6 @@ workflow JEWELER {
 
     emit:
         report  = MEMOTE_REPORT_SNAPSHOT.out.report
-        validation = VALIDATE_SBML.out.report
+        validation = ch_validation_output
         versions = ch_versions
 }

@@ -22,8 +22,7 @@ process MEMOTE_REPORT_SNAPSHOT {
     memote report snapshot \\
         ${args} \\
         --filename '${filename}' \\
-        '${model}' \\
-        || true
+        '${model}'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

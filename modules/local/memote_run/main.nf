@@ -24,8 +24,7 @@ process MEMOTE_RUN {
         --ignore-git \\
         --no-collect \\
         --filename '${filename}' \\
-        '${model}' \\
-        || true
+        '${model}'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
