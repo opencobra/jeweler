@@ -58,7 +58,7 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 ## Citations
 
-If you use opencobra/jeweler for your analysis, please cite it using the following doi: [10.5281/zenodo.10173260](https://doi.org/10.5281/zenodo.10173260) -->
+If you use opencobra/jeweler for your analysis, please cite it using the following doi: [10.5281/zenodo.10173259](https://zenodo.org/doi/10.5281/zenodo.10173259) -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
