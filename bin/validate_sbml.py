@@ -12,7 +12,9 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+import cobra
 from cobra.io import validate_sbml_model
+from memote.suite.cli.callbacks import DEFAULT_SOLVERS
 
 
 logger = logging.getLogger()
@@ -56,6 +58,12 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         default=Path("report.json.gz"),
     )
     parser.add_argument(
+        "--solver",
+        help="One of the MEMOTE compatible mathematical solver backends.",
+        choices=DEFAULT_SOLVERS,
+        default="glpk",
+    )
+    parser.add_argument(
         "-l",
         "--log-level",
         help="The desired log level (default WARNING).",
@@ -75,6 +83,9 @@ def main(argv: Optional[List[str]] = None) -> None:
         sys.exit(1)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
+
+    config = cobra.Configuration()
+    config.solver = args.solver
 
     is_valid, report = validate_sbml(args.sbml)
 

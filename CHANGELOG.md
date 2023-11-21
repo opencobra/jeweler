@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Set the chosen solver backend before parsing/validating a model from an SBML document. Thus avoiding, for example, GLPK specific problems.
+
 ## [1.0.0] - 2023-11-20
 
 Initial release of opencobra/jeweler, created with the [nf-core](https://nf-co.re/) template.
