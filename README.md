@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/691285192.svg)](https://zenodo.org/doi/10.5281/zenodo.10173259)
+
 ## Introduction
 
 **opencobra/jeweler** is a bioinformatics pipeline that tests and grades genome-scale metabolic models (GEMs). It first validates [SBML](https://sbml.org/) documents that describe metabolic models for constraint-based analysis. Valid documents are then passed on to the genome-scale metabolic model test suite ([MEMOTE](https://memote.io)).
@@ -56,8 +58,7 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use  opencobra/jeweler for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+If you use opencobra/jeweler for your analysis, please cite it using the following doi: [10.5281/zenodo.10173260](https://doi.org/10.5281/zenodo.10173260) -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
