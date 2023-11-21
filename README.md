@@ -13,10 +13,13 @@
 
 ## Usage
 
-> **Note**
+> [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
 > to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
 > with `-profile test` before running the workflow on actual data.
+
+> [!IMPORTANT]
+> Currently, only the Docker profile can succeed; use `-profile docker` together with your other options.
 
 First, prepare a samplesheet with your input data that looks as follows. Please also take a look at the [test samplesheet](assets/samplesheet.csv) for inspiration.
 
@@ -39,7 +42,7 @@ nextflow run opencobra/jeweler \
    --outdir <OUTDIR>
 ```
 
-> **Warning:**
+> [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
 > provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
@@ -58,7 +61,7 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 ## Citations
 
-If you use opencobra/jeweler for your analysis, please cite it using the following doi: [10.5281/zenodo.10173259](https://zenodo.org/doi/10.5281/zenodo.10173259)
+If you use opencobra/jeweler for your analysis, please cite it using the following doi: [10.5281/zenodo.10173259](https://zenodo.org/doi/10.5281/zenodo.10173259).
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
