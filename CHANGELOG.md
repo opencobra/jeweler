@@ -5,6 +5,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2023-11-21
+
+### Added
+
+- Added Zenodo DOI to documentation.
+
+### Fixed
+
+- Moved module-specific configuration into general `conf/modules.config` where it can is discovered and applied.
+
 ## [1.0.1] - 2023-11-21
 
 ### Fixed
