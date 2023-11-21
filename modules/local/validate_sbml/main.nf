@@ -3,7 +3,7 @@ process VALIDATE_SBML {
     label 'process_single'
 
     conda ""
-    container 'docker.io/opencobra/memote:0.16.0'
+    container 'docker.io/opencobra/memote:0.16.1'
 
     input:
     tuple val(meta), path(model)
