@@ -11,21 +11,18 @@ class WorkflowMain {
     //
     public static String citation(workflow) {
         return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-            // TODO nf-core: Add Zenodo DOI for pipeline after first release
-            //"* The pipeline\n" +
-            //"  https://doi.org/10.5281/zenodo.XXXXXXX\n\n" +
-            "* The nf-core framework\n" +
-            "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
-            "* Software dependencies\n" +
+            '* The pipeline\n' +
+            '  https://zenodo.org/doi/10.5281/zenodo.10173259\n\n' +
+            '* The nf-core framework\n' +
+            '  https://doi.org/10.1038/s41587-020-0439-x\n\n' +
+            '* Software dependencies\n' +
             "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
-
 
     //
     // Validate parameters and print summary to screen
     //
     public static void initialise(workflow, params, log) {
-
         // Print workflow version and exit on --version
         if (params.version) {
             String workflow_version = NfcoreTemplate.version(workflow)
@@ -60,4 +57,5 @@ class WorkflowMain {
         }
         return null
     }
+
 }
