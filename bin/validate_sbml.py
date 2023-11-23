@@ -100,7 +100,6 @@ def main(argv: Optional[List[str]] = None) -> None:
             "SBML document '%s' is **invalid** for use in COBRApy.", args.sbml
         )
         print("invalid")
-        sys.exit(1)
 
 
 if __name__ == "__main__":
