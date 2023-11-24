@@ -19,7 +19,7 @@
 > with `-profile test` before running the workflow on actual data.
 
 > [!IMPORTANT]
-> Currently, only the Docker profile can succeed; use `-profile docker` together with your other options.
+> Currently, only a Docker image and a conda environment definition exist. Thus, only the options `-profile docker` or `-profile conda` are guaranteed to succeed.
 
 First, prepare a samplesheet with your input data that looks as follows. Please also take a look at the [test samplesheet](https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/samplesheet.csv) for inspiration.
 
