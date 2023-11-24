@@ -21,7 +21,7 @@
 > [!IMPORTANT]
 > Currently, only the Docker profile can succeed; use `-profile docker` together with your other options.
 
-First, prepare a samplesheet with your input data that looks as follows. Please also take a look at the [test samplesheet](assets/samplesheet.csv) for inspiration.
+First, prepare a samplesheet with your input data that looks as follows. Please also take a look at the [test samplesheet](https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/samplesheet.csv) for inspiration.
 
 `samplesheet.csv`:
 
