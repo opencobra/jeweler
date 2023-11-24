@@ -2,7 +2,7 @@ process FETCH_SBML {
     tag "${meta.id}"
     label 'process_single'
 
-    conda ""
+    conda "${moduleDir}/environment.yml"
     container 'docker.io/opencobra/memote:0.16.1'
 
     input:
@@ -17,7 +17,8 @@ process FETCH_SBML {
 
     script:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.sbml.gz"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def filename = "${prefix}.sbml.gz"
     """
     fetch_sbml.py \\
         ${args} \\
@@ -32,12 +33,13 @@ process FETCH_SBML {
 
     stub:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.sbml.gz"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def filename = "${prefix}.sbml.gz"
     """
-    echo fetch_sbml.py \\
-        ${args} \\
-        --output '${filename}' \\
-        '${meta.id}'
+    # fetch_sbml.py \\
+    #     ${args} \\
+    #     --output '${filename}' \\
+    #     '${meta.id}'
 
     touch '${filename}'
 

@@ -2,7 +2,7 @@ process MEMOTE_RUN {
     tag "${meta.id}"
     label 'process_medium'
 
-    conda ""
+    conda "${moduleDir}/environment.yml"
     container 'docker.io/opencobra/memote:0.16.1'
 
     input:
@@ -17,7 +17,8 @@ process MEMOTE_RUN {
 
     script:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.json.gz"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def filename = "${prefix}.json.gz"
     """
     memote run \\
         ${args} \\
@@ -34,14 +35,15 @@ process MEMOTE_RUN {
 
     stub:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.json.gz"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def filename = "${prefix}.json.gz"
     """
-    echo memote run \\
-        ${args} \\
-        --ignore-git \\
-        --no-collect \\
-        --filename '${filename}' \\
-        '${model}'
+    # memote run \\
+    #     ${args} \\
+    #     --ignore-git \\
+    #     --no-collect \\
+    #     --filename '${filename}' \\
+    #     '${model}'
 
     touch '${filename}'
 

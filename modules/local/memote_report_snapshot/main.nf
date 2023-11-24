@@ -2,7 +2,7 @@ process MEMOTE_REPORT_SNAPSHOT {
     tag "${meta.id}"
     label 'process_medium'
 
-    conda ""
+    conda "${moduleDir}/environment.yml"
     container 'docker.io/opencobra/memote:0.16.1'
 
     input:
@@ -17,7 +17,8 @@ process MEMOTE_REPORT_SNAPSHOT {
 
     script:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.html"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def filename = "${prefix}.html"
     """
     memote report snapshot \\
         ${args} \\
@@ -32,12 +33,13 @@ process MEMOTE_REPORT_SNAPSHOT {
 
     stub:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.html"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def filename = "${prefix}.html"
     """
-    echo memote report snapshot \\
-        ${args} \\
-        --filename '${filename}' \\
-        '${model}'
+    # memote report snapshot \\
+    #     ${args} \\
+    #     --filename '${filename}' \\
+    #     '${model}'
 
     touch '${filename}'
 

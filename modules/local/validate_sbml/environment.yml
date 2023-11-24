@@ -1,0 +1,13 @@
+name: validate_sbml
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::python=3.11
+  - conda-forge::cobra=0.29.0
+  - conda-forge::optlang=1.8.1
+  - conda-forge::osqp=0.6.3
+  - pip:
+      - highspy
+      - memote

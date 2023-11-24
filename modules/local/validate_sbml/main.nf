@@ -2,7 +2,7 @@ process VALIDATE_SBML {
     tag "${meta.id}"
     label 'process_single'
 
-    conda ""
+    conda "${moduleDir}/environment.yml"
     container 'docker.io/opencobra/memote:0.16.1'
 
     input:
@@ -17,7 +17,8 @@ process VALIDATE_SBML {
 
     script:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.json.gz"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def filename = "${prefix}.json.gz"
     """
     validate_sbml.py \\
         ${args} \\
@@ -32,12 +33,13 @@ process VALIDATE_SBML {
 
     stub:
     def args = task.ext.args ?: ''
-    def filename = "${meta.id}.json.gz"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def filename = "${prefix}.json.gz"
     """
     # validate_sbml.py \\
-    #   ${args} \\
-    #   --output '${filename}' \\
-    #   '${model}'
+    #     ${args} \\
+    #     --output '${filename}' \\
+    #     '${model}'
 
     echo '${task.index % 2 ? 'valid' : 'invalid'}'
 
