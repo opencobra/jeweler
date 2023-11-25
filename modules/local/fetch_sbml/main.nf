@@ -1,6 +1,7 @@
 process FETCH_SBML {
     tag "${meta.id}"
     label 'process_single'
+    label 'network_retry'
 
     conda "${moduleDir}/environment.yml"
     container 'docker.io/opencobra/memote:0.16.1'
