@@ -1,5 +1,5 @@
 id,name,model,comment
 e_coli_core,Escherichia coli str. K-12 substr. MG1655,https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/model/e_coli_core.xml.gz,
 e_coli_invalid,,https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/model/e_coli_invalid.xml.gz,invalid SBML
-MODEL2204040002,Genome-scale metabolic network of Haemophilus influenzae RdKW20 (iNL638),,
+MODEL2008060001,Zymomonas ED Pathway,,
 iAB_RBC_283,Homo sapiens,,
