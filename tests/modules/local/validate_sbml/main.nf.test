@@ -1,0 +1,103 @@
+nextflow_process {
+
+    name 'Test Process VALIDATE_SBML'
+    script 'modules/local/validate_sbml/main.nf'
+    process 'VALIDATE_SBML'
+    tag 'modules'
+    tag 'modules_local'
+    tag 'validate_sbml'
+
+    test('Should positively validate a good SBML document') {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    [[id: 'e_coli_core'], file('https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/model/e_coli_core.xml.gz')]
+                )
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            with(process.out.report) {
+                assert size() == 1
+
+                with(get(0)) {
+                    assert get(1).strip() == 'valid'
+                    // FIXME: Accessing compressed JSON content is currently not supported,
+                    //  see https://github.com/askimed/nf-test/issues/156
+                    // def expectedKeys = [
+                        // 'SBML_FATAL',
+                        // 'SBML_ERROR',
+                        // 'SBML_SCHEMA_ERROR',
+                        // 'SBML_ERROR',
+                        // 'SBML_WARNING',
+                        // 'COBRA_FATAL',
+                        // 'COBRA_ERROR',
+                        // 'COBRA_WARNING',
+                        // 'COBRA_CHECK'
+                    // ] as Set
+                    // assert path(get(2)).json.keys.intersect(expectedKeys) == expectedKeys
+                    assert snapshot(path(get(2))).match()
+                }
+            }
+
+            // Reported versions should match snapshots.
+            assert snapshot(process.out.versions.first()).match('versions')
+        }
+
+    }
+
+    test('Should negatively validate a bad SBML document') {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    [[id: 'e_coli_invalid'], file('https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/model/e_coli_invalid.xml.gz')]
+                )
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            with(process.out.report) {
+                assert size() == 1
+
+                with(get(0)) {
+                    assert get(1).strip() == 'invalid'
+                    // FIXME: Accessing compressed JSON content is currently not supported,
+                    //  see https://github.com/askimed/nf-test/issues/156
+                    // def expectedKeys = [
+                        // 'SBML_FATAL',
+                        // 'SBML_ERROR',
+                        // 'SBML_SCHEMA_ERROR',
+                        // 'SBML_ERROR',
+                        // 'SBML_WARNING',
+                        // 'COBRA_FATAL',
+                        // 'COBRA_ERROR',
+                        // 'COBRA_WARNING',
+                        // 'COBRA_CHECK'
+                    // ] as Set
+                    // assert path(get(2)).json.keys.intersect(expectedKeys) == expectedKeys
+                    assert snapshot(path(get(2))).match()
+                }
+            }
+
+            // Reported versions should match snapshots.
+            assert snapshot(process.out.versions.first()).match('versions')
+        }
+
+    }
+}

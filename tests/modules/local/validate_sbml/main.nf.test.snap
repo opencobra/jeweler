@@ -1,0 +1,20 @@
+{
+    "versions": {
+        "content": [
+            "versions.yml:md5,aee549eaafd4530ffdde074a8ac002ee"
+        ],
+        "timestamp": "2023-11-28T14:51:33.170129371"
+    },
+    "Should positively validate a good SBML document": {
+        "content": [
+            "e_coli_core.json.gz:md5,0e7d8540d9ab428f56193ef7336b3fe6"
+        ],
+        "timestamp": "2023-11-28T15:48:34.956083266"
+    },
+    "Should negatively validate a bad SBML document": {
+        "content": [
+            "e_coli_invalid.json.gz:md5,050e3669abbec8adba4128aff70156cf"
+        ],
+        "timestamp": "2023-11-28T15:50:43.497738208"
+    }
+}
