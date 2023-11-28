@@ -14,7 +14,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.from(
+                input[0] = Channel.of(
                     [id: 'BIOMD0000000633'],
                     [id: 'e_coli_core']
                 )
@@ -27,13 +27,14 @@ nextflow_process {
 
             // We currently can't use snapshots, because the gzip compression includes a timestamp.
             def items = process.out.sbml
-            // `with` block currently not working as expected, see https://github.com/askimed/nf-test/issues/155
+            // `with` block currently not working as expected,
+            //  see https://github.com/askimed/nf-test/issues/155
             // with (process.out.sbml) {
             assert items.size() == 2 : 'The number of output SBML documents does not correspond to the number of inputs.'
             assert items.collect { meta, model -> file(model).name == "${meta.id}.sbml.gz" }.inject(true) { a, b -> a && b } : 'The documents are named unexpectedly.'
             // }
 
-            // Reported versions should match snapshots (rerun snapshots on update).
+            // Reported versions should match snapshots.
             assert snapshot(process.out.versions.first()).match('versions')
         }
 
@@ -48,7 +49,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.from([id: 'snafu'])
+                input[0] = Channel.of([id: 'snafu'])
                 """
             }
         }
@@ -65,7 +66,7 @@ nextflow_process {
                 assert model.size() == 0
             }
 
-            // Reported versions should match snapshots (rerun snapshots on update).
+            // Reported versions should match snapshots.
             assert snapshot(process.out.versions.first()).match('versions')
         }
 
@@ -78,7 +79,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.from([id: 'snafu'])
+                input[0] = Channel.of([id: 'snafu'])
                 """
             }
         }
