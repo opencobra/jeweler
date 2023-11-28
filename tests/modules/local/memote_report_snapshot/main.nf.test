@@ -1,0 +1,63 @@
+nextflow_process {
+
+    name 'Test Process MEMOTE_REPORT_SNAPSHOT'
+    script 'modules/local/memote_report_snapshot/main.nf'
+    process 'MEMOTE_REPORT_SNAPSHOT'
+    tag 'modules'
+    tag 'modules_local'
+    tag 'memote_report_snapshot'
+
+    test('Should succeed for a valid SBML document') {
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    [[id: 'e_coli_core'], file('https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/model/e_coli_core.xml.gz')]
+                )
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            with(process.out.report) {
+                assert size() == 1
+
+                with(get(0)) {
+                    assert get(1).endsWith('html')
+
+                    with(path(get(1)).readLines()) {
+                        assert size() == 37
+                        assert contains('  <title>MemoteReportApp</title>')
+                    }
+                }
+            }
+
+            // Reported versions should match snapshots.
+            assert snapshot(process.out.versions.first()).match('versions')
+        }
+    }
+
+    test('Should fail for an invalid SBML document') {
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    [[id: 'e_coli_invalid'], file('https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/model/e_coli_invalid.xml.gz')]
+                )
+                """
+            }
+        }
+
+        then {
+            assert process.failed
+        }
+    }
+}
