@@ -69,7 +69,7 @@ include { JEWELER } from './workflows/jeweler'
 workflow OPENCOBRA_JEWELER {
     def ch_input = Channel.fromSamplesheet('input')
 
-    JEWELER(ch_input)
+    JEWELER(ch_input, params.run_report_snapshot, params.run_report_raw)
 
     // Collect generated reports.
     ch_input.map { meta, model -> [meta.id, meta.name] }
@@ -82,7 +82,7 @@ workflow OPENCOBRA_JEWELER {
         )
         // Join report output information.
         .join(
-            JEWELER.out.report.map { meta, report -> [meta.id, report.name]},
+            JEWELER.out.report_snapshot.map { meta, report -> [meta.id, report.name]},
             by: 0,
             remainder: true,
             failOnDuplicate: true

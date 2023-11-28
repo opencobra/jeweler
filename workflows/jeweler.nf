@@ -5,6 +5,7 @@
 include { FETCH_SBML } from '../modules/local/fetch_sbml/main'
 include { VALIDATE_SBML } from '../modules/local/validate_sbml/main'
 include { MEMOTE_REPORT_SNAPSHOT } from '../modules/local/memote_report_snapshot/main'
+include { MEMOTE_RUN } from '../modules/local/memote_run/main'
 
 /******************************************************************************
  * Import Local Subworkflows
@@ -28,6 +29,8 @@ def multiqc_report = []
 workflow JEWELER {
     take:
         ch_input
+        run_report_snapshot
+        run_report_raw
 
     main:
         def ch_versions = Channel.empty()
@@ -64,11 +67,23 @@ workflow JEWELER {
             )
             .map { model_id, meta, model -> [meta, model] }
 
-        MEMOTE_REPORT_SNAPSHOT(ch_memote_input)
-        ch_versions = ch_versions.mix(MEMOTE_REPORT_SNAPSHOT.out.versions.first())
+        ch_report_snapshot = Channel.empty()
+        if (run_report_snapshot) {
+            MEMOTE_REPORT_SNAPSHOT(ch_memote_input)
+            ch_report_snapshot = ch_report_snapshot.mix(MEMOTE_REPORT_SNAPSHOT.out.report)
+            ch_versions = ch_versions.mix(MEMOTE_REPORT_SNAPSHOT.out.versions.first())
+        }
+
+        ch_report_raw = Channel.empty()
+        if (run_report_raw) {
+            MEMOTE_RUN(ch_memote_input)
+            ch_report_raw = ch_report_raw.mix(MEMOTE_RUN.out.report)
+            ch_versions = ch_versions.mix(MEMOTE_RUN.out.versions.first())
+        }
 
     emit:
-        report  = MEMOTE_REPORT_SNAPSHOT.out.report
+        report_snapshot = ch_report_snapshot
+        report_raw = ch_report_raw
         validation = ch_validation_output
         versions = ch_versions
 }
