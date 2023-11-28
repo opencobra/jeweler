@@ -1,0 +1,91 @@
+nextflow_process {
+
+    name 'Test Process FETCH_SBML'
+    script 'modules/local/fetch_sbml/main.nf'
+    process 'FETCH_SBML'
+    tag 'modules'
+    tag 'modules_local'
+    tag 'fetch_sbml'
+
+    test('Should fetch a model with existing identifier and SBML') {
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.from(
+                    [id: 'BIOMD0000000633'],
+                    [id: 'e_coli_core']
+                )
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            // We currently can't use snapshots, because the gzip compression includes a timestamp.
+            def items = process.out.sbml
+            // `with` block currently not working as expected, see https://github.com/askimed/nf-test/issues/155
+            // with (process.out.sbml) {
+            assert items.size() == 2 : 'The number of output SBML documents does not correspond to the number of inputs.'
+            assert items.collect { meta, model -> file(model).name == "${meta.id}.sbml.gz" }.inject(true) { a, b -> a && b } : 'The documents are named unexpectedly.'
+            // }
+
+            // Reported versions should match snapshots (rerun snapshots on update).
+            assert snapshot(process.out.versions.first()).match('versions')
+        }
+
+    }
+
+    test('Should succeed with a stub run') {
+        options '-stub-run'
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.from([id: 'snafu'])
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            with (process.out.sbml) {
+                assert size() == 1
+
+                // `name` is a protected variable referring to the outer scope's test name.
+                def model = file(get(0).get(1))
+                assert model.name == 'snafu.sbml.gz'
+                assert model.size() == 0
+            }
+
+            // Reported versions should match snapshots (rerun snapshots on update).
+            assert snapshot(process.out.versions.first()).match('versions')
+        }
+
+    }
+
+    test('Should fail with a non-existant model identifier') {
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.from([id: 'snafu'])
+                """
+            }
+        }
+
+        then {
+            assert process.failed
+        }
+
+    }
+}
