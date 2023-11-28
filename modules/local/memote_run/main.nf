@@ -9,7 +9,7 @@ process MEMOTE_RUN {
     tuple val(meta), path(model)
 
     output:
-    tuple val(meta), path('*.json.gz'), emit: outcome
+    tuple val(meta), path('*.json.gz'), emit: report
     path 'versions.yml', emit: versions
 
     when:
@@ -23,9 +23,9 @@ process MEMOTE_RUN {
     memote run \\
         ${args} \\
         --ignore-git \\
-        --no-collect \\
         --filename '${filename}' \\
-        '${model}'
+        '${model}' \\
+        || echo "\$?"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -43,7 +43,8 @@ process MEMOTE_RUN {
     #     --ignore-git \\
     #     --no-collect \\
     #     --filename '${filename}' \\
-    #     '${model}'
+    #     '${model}' \\
+    #     || echo "\$?"
 
     touch '${filename}'
 
