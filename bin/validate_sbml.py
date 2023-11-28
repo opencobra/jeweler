@@ -9,6 +9,7 @@ import gzip
 import json
 import logging
 import sys
+from io import TextIOWrapper
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -89,8 +90,10 @@ def main(argv: Optional[List[str]] = None) -> None:
 
     is_valid, report = validate_sbml(args.sbml)
 
-    with gzip.open(args.output, "wt") as handle:
-        json.dump(report, handle, separators=(",", ":"))
+    # We need to use the GzipFile class directly in order to fix the modification time.
+    with gzip.GzipFile(filename=args.output, mode="w", mtime=0) as handle:
+        with TextIOWrapper(handle, encoding="utf-8") as wrapper:
+            json.dump(report, wrapper, separators=(",", ":"))
 
     if is_valid:
         logger.info("SBML document '%s' is **valid** for use in COBRApy.", args.sbml)
