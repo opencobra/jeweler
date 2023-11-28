@@ -1,0 +1,30 @@
+{
+    "snapshot-versions": {
+        "content": [
+            [
+                "versions.yml:md5,8415a0b802a382e43ab1e162929f37a3",
+                "versions.yml:md5,c29dae7fe915e975714c56b92f8885ff"
+            ]
+        ],
+        "timestamp": "2023-11-28T22:16:07.263034958"
+    },
+    "snapshot-raw-versions": {
+        "content": [
+            [
+                "versions.yml:md5,1b2fe0ed8b75f06aa2d41d37dfb00f17",
+                "versions.yml:md5,8415a0b802a382e43ab1e162929f37a3",
+                "versions.yml:md5,c29dae7fe915e975714c56b92f8885ff"
+            ]
+        ],
+        "timestamp": "2023-11-28T22:16:39.008683712"
+    },
+    "raw-versions": {
+        "content": [
+            [
+                "versions.yml:md5,1b2fe0ed8b75f06aa2d41d37dfb00f17",
+                "versions.yml:md5,8415a0b802a382e43ab1e162929f37a3"
+            ]
+        ],
+        "timestamp": "2023-11-28T22:16:22.414753979"
+    }
+}
