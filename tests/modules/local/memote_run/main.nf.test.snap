@@ -4,11 +4,5 @@
             "versions.yml:md5,d265b13e60ee9cdb2f71f1dffcbea5d0"
         ],
         "timestamp": "2023-11-28T16:44:37.742661143"
-    },
-    "Should succeed for a valid SBML document": {
-        "content": [
-            "e_coli_core.json.gz:md5,b2e484bf002b95ea39a3711262ccc0ac"
-        ],
-        "timestamp": "2023-11-28T16:45:11.794158498"
     }
 }
