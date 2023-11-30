@@ -1,0 +1,27 @@
+nextflow_pipeline {
+
+    name 'Test Workflow main.nf'
+    script 'main.nf'
+    tag 'pipelines'
+    tag 'opencobra_jeweler'
+
+    test('Should run without failures') {
+
+        when {
+            params {
+                input = 'https://raw.githubusercontent.com/opencobra/jeweler/testdata/data/samplesheet.csv'
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            def summary = file("${params.outdir}/reports.tsv")
+            assert summary.exists()
+            assert summary.readLines().size() == 4
+        }
+
+    }
+
+}
