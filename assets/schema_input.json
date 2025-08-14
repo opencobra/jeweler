@@ -10,25 +10,25 @@
             "id": {
                 "type": "string",
                 "pattern": "^\\S+$",
+                "unique": true,
                 "errorMessage": "A model identifier must be provided and must not contain spaces.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "name": {
                 "type": "string",
-                "meta": [
-                    "name"
-                ]
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.(xml|sbml)(\\.gz)?$",
+                "errorMessage": "",
+                "meta": ["name"]
             },
             "model": {
                 "type": "string",
                 "format": "file-path-exists",
+                "pattern": "^\\S+\\.(xml|sbml)(\\.gz)?$",
                 "errorMessage": "Path to an SBML document defining a metabolic model."
             }
         },
-        "required": [
-            "id"
-        ]
+        "required": ["id"]
     }
 }
